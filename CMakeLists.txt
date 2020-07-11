@@ -35,19 +35,20 @@ set(EXAMPLES
     examples/lescan_simple.cc
     examples/temperature.cc)
 
-set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules;${CMAKE_MODULE_PATH}")
 
 find_package(Bluez REQUIRED)
 
 include_directories(${PROJECT_SOURCE_DIR} ${BLUEZ_INCLUDE_DIRS})
 add_library(${PROJECT_NAME} SHARED ${SRC})
+target_link_libraries(${PROJECT_NAME} ${BLUEZ_LIBRARIES})
 set_target_properties(${PROJECT_NAME} PROPERTIES SOVERSION 5)
 
 foreach (example_src ${EXAMPLES})
     get_filename_component(example_name ${example_src} NAME_WE)
 
     add_executable(${example_name} ${example_src})
-    target_link_libraries(${example_name} ${PROJECT_NAME} ${BLUEZ_LIBRARIES})
+    target_link_libraries(${example_name} ${PROJECT_NAME})
     set_target_properties(${example_name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY examples)
 endforeach()
 
